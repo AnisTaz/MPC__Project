@@ -6,14 +6,14 @@ import sys
 import os
 import do_mpc
 
-def template_mpc(model, silence_solver=False):
+def template_mpc(model,n_horizon=20,step_time=0.05,criter=1, silence_solver=False):
 
     mpc = do_mpc.controller.MPC(model)
     # Set settings of MPC:
-    mpc.settings.n_horizon =  20
+    mpc.settings.n_horizon =  n_horizon
     mpc.settings.n_robust =  0
     mpc.settings.open_loop =  0
-    mpc.settings.t_step =  0.05
+    mpc.settings.t_step =  step_time
     mpc.settings.state_discretization =  'collocation'
     mpc.settings.collocation_type =  'radau'
     mpc.settings.collocation_deg =  3
@@ -30,7 +30,7 @@ def template_mpc(model, silence_solver=False):
     v3 = model.x['v3']
     v4 = model.x['v4']
     # definition du critere lterme critere de tracking, m term critere une fois arrivee a la cible 
-    lterm = cost_tracking + (v3**2 + v4**2)
+    lterm = cost_tracking + criter*(v3**2 + v4**2)
     mterm = cost_tracking  
 
     mpc.set_objective(mterm=mterm, lterm=lterm)

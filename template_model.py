@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 plt.ion()
 from matplotlib import rcParams
 from matplotlib.animation import FuncAnimation, FFMpegWriter, ImageMagickWriter
-def template_model():
+def template_model(alpha_ref=np.pi,r_ref=0.6,gamma=2*np.pi):
     # define model type 
     model_type = "continuous"
     model = do_mpc.model.Model(model_type)
