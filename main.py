@@ -30,15 +30,24 @@ def main():
     show_animation = True
     store_animation = False
     store_results = False
-
+    # paramettres 
+    x_obs, y_obs = 0.0, 0.0
+    r_obs = 0.4
+    r_ref = 0.6
+    alpha_ref = np.pi
+    gamma = 2*np.pi
+    n_steps = 200
+    step_time = 0.05
+    criter = 1
+    n_horizon = 40
     # Setting up model
-    model = template_model(alpha_ref=np.pi,r_ref=0.6,gamma=2*np.pi)
+    model = template_model(alpha_ref=alpha_ref,r_ref=r_ref,gamma=gamma)
 
     # setting up a simulator, given the model
     simulator = template_simulator(model)
 
     # setting up controlleur
-    mpc = template_mpc(model,n_horizon=40,step_time=0.05,criter=1) # cirtere = 0 on choisit le premier critere J1 = ||pf - pref||^2 + ||thetaf - theta_ref||^2, critere = 1 on choisit J2
+    mpc = template_mpc(model,n_horizon=n_horizon,step_time=step_time,criter=criter) # cirtere = 0 on choisit le premier critere J1 = ||pf - pref||^2 + ||thetaf - theta_ref||^2, critere = 1 on choisit J2
 
     # setting up estimator 
     estimator = do_mpc.estimator.StateFeedback(model) #on suppose un retour d'etat (tout les etats sont mesurables)
@@ -62,8 +71,7 @@ def main():
 
     # gets the initial condition of the algebraic variables
     z0 = simulator.init_algebraic_variables()
-
-    n_steps = 200 
+ 
         
     print("Début de la simulation...")
     
@@ -85,11 +93,6 @@ def main():
 
     data = mpc.data
     t = data['_time']
-    
-    x_obs, y_obs = 0.0, 0.0
-    r_obs = 0.4
-    r_ref = 0.6
-    alpha_ref = np.pi
     
     x_target = r_ref * np.cos(alpha_ref)
     y_target = r_ref * np.sin(alpha_ref)
