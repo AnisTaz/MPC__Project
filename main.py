@@ -32,21 +32,21 @@ def main():
     store_results = False
 
     # Setting up model
-    model = template_model()
+    model = template_model(alpha_ref=np.pi,r_ref=0.6,gamma=2*np.pi)
 
     # setting up a simulator, given the model
     simulator = template_simulator(model)
 
     # setting up controlleur
-    mpc = template_mpc(model)
+    mpc = template_mpc(model,n_horizon=40,step_time=0.05,criter=1) # cirtere = 0 on choisit le premier critere J1 = ||pf - pref||^2 + ||thetaf - theta_ref||^2, critere = 1 on choisit J2
 
     # setting up estimator 
     estimator = do_mpc.estimator.StateFeedback(model) #on suppose un retour d'etat (tout les etats sont mesurables)
 
     # definition des poistions initialles
 
-    simulator.x0['x1'] = -1
-    simulator.x0['x2'] = -1
+    simulator.x0['x1'] = -2
+    simulator.x0['x2'] = -2
     simulator.x0['x3'] = np.pi/2
     simulator.x0['x4'] = 0
     simulator.x0['x5'] = 0
